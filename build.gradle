@@ -1,0 +1,60 @@
+apply from: 'versions.gradle'
+apply from: 'deps.gradle'
+if (file('local.gradle').exists()) {
+    apply from: 'local.gradle'
+}
+
+buildscript {
+    ext.kotlin_version = '1.2.51'
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+//        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "jp.classmethod.aws:gradle-aws-plugin:0.31"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenLocal()
+        jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+def isReleaseBuild() {
+    return isTag() && !isSnapshot()
+}
+
+def isSnapshot() {
+    return version.contains("SNAPSHOT")
+}
+
+boolean isTravis() {
+    return System.getenv('TRAVIS_BUILD_NUMBER') ? true : false
+}
+
+boolean isTag() {
+    def tag = System.getenv('TRAVIS_TAG')
+    return !(tag == null || tag.isEmpty())
+}
+
+def buildNumber() {
+    return System.getenv('TRAVIS_BUILD_NUMBER') ?: "0"
+}

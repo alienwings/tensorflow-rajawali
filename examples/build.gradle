@@ -1,0 +1,106 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId "org.rajawali3d.examples"
+        minSdkVersion 24
+        targetSdkVersion 27
+        versionCode 1
+        versionName '1.0'
+
+/*        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_TOOLCHAIN=gcc', '-DANDROID_STL=gnustl_static'
+                abiFilters "armeabi-v7a","armeabi","x86"
+            }
+        }*/
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+
+        dexOptions {
+            javaMaxHeapSize "4g"
+        }
+    }
+
+/*    externalNativeBuild {
+        cmake {
+            path './jni/CMakeLists.txt'
+        }
+    }*/
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    sourceSets {
+        main {
+            main.assets.srcDirs = ['src/main/assets']
+            main.jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+//    productFlavors {
+//        withVuforia {
+//        }
+//        withoutVuforia {
+//        }
+//    }
+
+    dexOptions {
+        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
+        preDexLibraries = !isTravis()
+    }
+
+    lintOptions {
+        abortOnError false;
+    }
+}
+repositories {
+    jcenter()
+    google()
+}
+
+dependencies {
+    compile project.depAndroidSupport
+    compile project.depAppCompat
+    compile project.depRecycler
+    compile project.depGSON
+    compile project.depIon
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // ARCore library
+    compile 'com.google.ar:core:1.1.0'
+//    compile 'com.google.ar:core:1.0.0'
+
+    // Rajawali
+//    compile 'org.rajawali3d:rajawali:1.1.970@aar'
+
+    compile 'com.android.support:appcompat-v7:27.1.0'
+    compile 'com.android.support:design:27.1.0'
+
+    compile project(':rajawali')
+//    withVuforiaCompile project(':vuforia')
+//    withVuforiaCompile project(':vr')
+
+//    wearApp project(':wear-example')
+
+    compile 'org.tensorflow:tensorflow-android:1.2.0'
+}
