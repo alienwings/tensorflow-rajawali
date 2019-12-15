@@ -5,7 +5,7 @@ The project integrates ARCore and TensorFlow objection detection for [Rajawali](
 which is a 3D render engine which doesn't include any AR or AI features.
 
 ## Demo
-1. static object
+1. Put static object at ARCore plane
 
 ![img1](doc/img1.png)
 
